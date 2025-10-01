@@ -10,6 +10,8 @@
 #include "ChipConfig.h"
 #include "IO.h"
 #include "timer.h"
+#include "PWM.h"
+
 
 int main(void) {
     /***********************************************************************************************/
@@ -33,7 +35,9 @@ int main(void) {
     LED_ROUGE_2 = 1;
     InitTimer23();
     InitTimer1();
-
+    InitPWM();
+    //PWMSetSpeed(20,MOTEUR_DROIT);
+    //PWMSetSpeed(20,MOTEUR_GAUCHE);
     /***********************************************************************************************/
     // Boucle Principale
     /***********************************************************************************************/
