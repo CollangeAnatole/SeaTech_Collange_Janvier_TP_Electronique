@@ -12,7 +12,7 @@
 
 
 void InitPWM(void);
-void PWMSetSpeed(float,int);
+void PWMSetSpeedConsigne(float,int);
 
 #endif	/* PWM_H */
 

@@ -6,7 +6,7 @@
 void InitTimer1(void) {
 //Timer1 pour horodater les mesures (1ms)
 T1CONbits.TON = 0; // Disable Timer
-T1CONbits.TCKPS = 0b01; //Prescaler
+T1CONbits.TCKPS = 0b10; //Prescaler
 //11 = 1:256 prescale value
 //10 = 1:64 prescale value
 //01 = 1:8 prescale value
@@ -21,6 +21,7 @@ T1CONbits.TON = 1; // Enable Timer
 void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
 IFS0bits.T1IF = 0;
 LED_BLANCHE_1 = !LED_BLANCHE_1;
+PWMUpdateSpeed();
 }
 //Initialisation d?un timer 32 bits
 void InitTimer23(void) {
@@ -28,7 +29,7 @@ T3CONbits.TON = 0; // Stop any 16-bit Timer3 operation
 T2CONbits.TON = 0; // Stop any 16/32-bit Timer3 operation
 T2CONbits.T32 = 1; // Enable 32-bit Timer mode
 T2CONbits.TCS = 0; // Select internal instruction cycle clock
-T2CONbits.TCKPS = 0b00; // Select 1:1 Prescaler
+T2CONbits.TCKPS = 0b01; // Select 1:1 Prescaler
 TMR3 = 1800; // Clear 32-bit Timer (msw)
 TMR2 = 0x00; // Clear 32-bit Timer (lsw)
 PR3 = 0x0393; // Load 32-bit period value (msw)
@@ -44,13 +45,13 @@ unsigned char toggle = 0;
 void __attribute__((interrupt, no_auto_psv)) _T3Interrupt(void) {
 IFS0bits.T3IF = 0; // Clear Timer3 Interrupt Flag
 if(toggle == 0){
-    PWMSetSpeed(20, MOTEUR_DROIT);
-    PWMSetSpeed(20, MOTEUR_GAUCHE);
+    PWMSetSpeedConsigne(20, 0);
+    PWMSetSpeedConsigne(20, 1);
     toggle = 1;
 }
 else{
-    PWMSetSpeed(-20, MOTEUR_DROIT);
-    PWMSetSpeed(-20, MOTEUR_GAUCHE);
+    PWMSetSpeedConsigne(-20, 0);
+    PWMSetSpeedConsigne(-20, 1);
     toggle = 0;
 }
 }
