@@ -16,6 +16,8 @@ void InitIO()
     ANSELC=0;             //Desactivation de toutes entree analogique
     ANSELE=0;             //Desactivation de toutes entree analogique
     ANSELG=0;             //Desactivation de toutes entree analogique
+    
+    
 
     // Configuration des sorties
 
@@ -31,6 +33,12 @@ void InitIO()
     _TRISA9 = 0; // LED Bleue2
     _TRISA10 = 0; // LED Rouge2
     
+    
+    _TRISH1 = 0;
+    _TRISH2 = 0;
+    _TRISH0 = 0;
+    
+    _TRISJ10 = 0;
 
     
     //****** Moteurs ************************
