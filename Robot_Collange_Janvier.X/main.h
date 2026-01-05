@@ -36,8 +36,14 @@
 #define OBSTACLE_A_EXTREME_GAUCHE 4
 #define OBSTACLE_A_EXTREME_DROIT 5
 
+#define DistMil 40
+#define Dist 30
+#define DistExt 20
+
 void OperatingSystemLoop(void);
 void SetNextRobotStateInAutomaticMode();
+void UpdateCompteur();
+void Marche();
 
 #ifdef	__cplusplus
 extern "C" {

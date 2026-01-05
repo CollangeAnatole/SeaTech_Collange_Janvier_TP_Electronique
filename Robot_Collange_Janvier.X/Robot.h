@@ -8,6 +8,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 #define acceleration 5
+#define MaxCompt 990
+
 typedef struct robotStateBITS {
     union {
         struct {
@@ -22,6 +24,9 @@ typedef struct robotStateBITS {
             float distanceTelemetreGauche;
             float distanceTelemetreExtremeDroit;
             float distanceTelemetreExtremeGauche;
+            
+            double compteur;
+            int EnMarche;
         };
     };
 } ROBOT_STATE_BITS;

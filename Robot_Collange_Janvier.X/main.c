@@ -38,7 +38,7 @@ void OperatingSystemLoop(void) {
             SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_GAUCHE:
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
             PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
             stateRobot = STATE_TOURNE_GAUCHE_EN_COURS;
             break;
@@ -46,8 +46,8 @@ void OperatingSystemLoop(void) {
             SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_GAUCHE_DOUX:
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
             stateRobot = STATE_TOURNE_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_GAUCHE_DOUX_EN_COURS:
@@ -55,15 +55,15 @@ void OperatingSystemLoop(void) {
             break;
         case STATE_TOURNE_DROITE:
             PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
             stateRobot = STATE_TOURNE_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_DROITE_EN_COURS:
             SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_DROITE_DOUX:
-            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
             stateRobot = STATE_TOURNE_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_DROITE_DOUX_EN_COURS:
@@ -95,6 +95,80 @@ unsigned char nextStateRobot = 0;
 void SetNextRobotStateInAutomaticMode() {
     unsigned char positionObstacle = PAS_D_OBSTACLE;
     //éDtermination de la position des obstacles en fonction des ééètlmtres
+    
+    if (robotState.distanceTelemetreCentre < DistMil){
+        if (robotState.distanceTelemetreDroit < Dist && robotState.distanceTelemetreGauche < Dist){
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+        }
+        else if (robotState.distanceTelemetreDroit < Dist ){
+            nextStateRobot = STATE_TOURNE_GAUCHE;
+        }
+        else if (robotState.distanceTelemetreGauche < Dist ){
+            nextStateRobot = STATE_TOURNE_DROITE;
+        }
+        else{
+            if (robotState.distanceTelemetreExtremeDroit < DistExt && robotState.distanceTelemetreExtremeGauche < DistExt){
+                nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            }
+            else if (robotState.distanceTelemetreExtremeDroit < DistExt ){
+                nextStateRobot = STATE_TOURNE_GAUCHE;
+            }
+            else if (robotState.distanceTelemetreExtremeGauche < DistExt ){
+                nextStateRobot = STATE_TOURNE_DROITE;
+            }
+            else{
+                nextStateRobot = STATE_TOURNE_GAUCHE;
+            }
+        }
+    }
+    else{
+        if (robotState.distanceTelemetreExtremeDroit < DistExt && robotState.distanceTelemetreExtremeGauche < DistExt){
+            if (robotState.distanceTelemetreDroit < Dist && robotState.distanceTelemetreGauche < Dist){
+                nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            }
+            else if (robotState.distanceTelemetreDroit < Dist ){
+                nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            }
+            else if (robotState.distanceTelemetreGauche < Dist ){
+                nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            }
+            else{
+                nextStateRobot = STATE_AVANCE;
+            }
+        }
+        else if (robotState.distanceTelemetreExtremeDroit < DistExt ){
+            if (robotState.distanceTelemetreDroit < Dist ){
+                nextStateRobot = STATE_TOURNE_GAUCHE;
+            }
+            else{
+                nextStateRobot = STATE_TOURNE_GAUCHE_DOUX;
+            }
+        }
+        else if (robotState.distanceTelemetreExtremeGauche < DistExt ){
+            if (robotState.distanceTelemetreGauche < Dist ){
+                nextStateRobot = STATE_TOURNE_DROITE;
+            }
+            else{
+                nextStateRobot = STATE_TOURNE_DROITE_DOUX;
+            }
+        }
+        else{
+            if (robotState.distanceTelemetreDroit < Dist && robotState.distanceTelemetreGauche < Dist){
+                nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            }
+            else if (robotState.distanceTelemetreDroit < Dist ){
+                nextStateRobot = STATE_TOURNE_GAUCHE;
+            }
+            else if (robotState.distanceTelemetreGauche < Dist ){
+                nextStateRobot = STATE_TOURNE_DROITE;
+            }
+            else{
+                nextStateRobot = STATE_AVANCE;
+            }            
+        }
+        
+    }
+    /*
     if (robotState.distanceTelemetreDroit > 30 &&
             robotState.distanceTelemetreExtremeDroit > 30 &&
             robotState.distanceTelemetreCentre > 20 &&
@@ -150,10 +224,33 @@ void SetNextRobotStateInAutomaticMode() {
         nextStateRobot = STATE_TOURNE_GAUCHE_DOUX;
     else if (positionObstacle == OBSTACLE_A_EXTREME_GAUCHE)
         nextStateRobot = STATE_TOURNE_DROITE_DOUX;
+    */
     //Si l?on n?est pas dans la transition de lé?tape en cours
     if (nextStateRobot != stateRobot - 1)
         stateRobot = nextStateRobot;
 }
+
+    
+void Marche(){
+    EN_PWM=1;
+    robotState.compteur=0;
+    robotState.EnMarche=1;
+}
+
+void UpdateCompteur (){
+    if (robotState.EnMarche==1){
+        if (robotState.compteur<MaxCompt){
+            robotState.compteur+=1;
+        }
+        else{
+            EN_PWM=0;
+            robotState.EnMarche=0;
+            robotState.compteur=0;
+        }
+    }
+}
+
+
 
 int main(void) {
     /***********************************************************************************************/
@@ -250,7 +347,7 @@ int main(void) {
            LED_ROUGE_2 = 1;
            LED_VERTE_2 = 1;
            LED_BLANCHE_2 = 1;
-           EN_PWM = 1;
+           Marche();
         }
         else{
            LED_BLEUE_2 = 0;
